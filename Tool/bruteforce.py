@@ -3,8 +3,8 @@ import time
 
 flag = False
 
-excel_dosya = r'C:\Users\Administrator\Source\Repos\Fatih-gul65\PythonCyberSecurityTool\encrypted_excel_file.xlsx'
-sifre_dosya = r'C:\Users\Administrator\Source\Repos\Fatih-gul65\PythonCyberSecurityTool\wordlist.txt'
+excel_dosya = r'C:\Users\AHMET\Source\Repos\PythonCyberSecurityTool\Kitap1.xlsx'
+sifre_dosya = r'C:\Users\AHMET\Source\Repos\PythonCyberSecurityTool\wordlist.txt'
 
 excel_app = win32com.client.Dispatch("Excel.Application")
 
