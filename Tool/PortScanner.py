@@ -2,7 +2,7 @@ import threading
 import socket
 
 # Port tarama fonksiyonu
-def portarama(ip, port):
+def portara(ip, port):
     try:
         soket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         soket.settimeout(0.5)
@@ -23,7 +23,7 @@ def threadile(hedef1, hedef2, portlar):
         hedef_ip = hedef1.split('.')[0] + '.' + hedef1.split('.')[1] + '.' + hedef1.split('.')[2] + '.' + str(sonblok)
         portlar_listesi = portlar.split(',')
         for port in portlar_listesi:
-            thread = threading.Thread(target=portarama, args=(hedef_ip, int(port)))
+            thread = threading.Thread(target=portara, args=(hedef_ip, int(port)))
             threadliste.append(thread)
             thread.start()
 
@@ -32,7 +32,7 @@ def port_aralik_tarama(hedef, baslangic_portu, bitis_portu):
     print('Tarama Baþlýyor.....')
     print('*'*50)
     for port in range(baslangic_portu, bitis_portu+1):
-        portarama(hedef, port)
+        portara(hedef, port)
 
 # Kullanýcýdan seçim al
 print("1 - IP Aralýðýnda Belirli Portlarý Tara")
