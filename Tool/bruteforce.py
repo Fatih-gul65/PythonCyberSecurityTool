@@ -1,26 +1,34 @@
-﻿sifre = "99999"
+﻿import win32com.client
+import time
 
-rakamlar = "0123456789"
+flag = False
 
-flag = 0
+excel_dosya = r'C:\Users\Administrator\Source\Repos\Fatih-gul65\PythonCyberSecurityTool\encrypted_excel_file.xlsx'
+sifre_dosya = r'C:\Users\Administrator\Source\Repos\Fatih-gul65\PythonCyberSecurityTool\wordlist.txt'
 
-for basamak0 in rakamlar: 
-    for basamak1 in rakamlar:
-        for basamak2 in rakamlar:
-            for basamak3 in rakamlar:
-                for basamak4 in rakamlar:
-                    deneme = (basamak0+basamak1+basamak2+basamak3+basamak4)
-                    print(deneme)
-                    if deneme == sifre:
-                        print ("Parolanız: "+ deneme)
-                        flag = True
-                        break
-                
-                if flag == True:
-                    break
-            if flag == True:
-                    break
+excel_app = win32com.client.Dispatch("Excel.Application")
+
+password_list = []
+
+with open(sifre_dosya, "r", encoding = "utf-8") as pwd:
+    passwords = pwd.readlines()
+    for password in passwords:
+        password_list.append(password.replace("\n", ""))
+        
+
+for password in password_list:
+    try:
+        wb = excel_app.Workbooks.Open(excel_dosya, False, True, None, password)
+        wb.Unprotect(password)
+        print("Şifreniz: " + password)
+        excel_app.DisplayAlerts = False
+        excel_app.Quit()
+        time.sleep(1)
+        flag = True
+        quit()
+    except:
         if flag == True:
-                 break   
-    if flag == True:
-                 break    
+            break
+        else: 
+            print("Şifre Hatalı: " + password)
+        continue
