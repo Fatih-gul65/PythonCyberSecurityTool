@@ -1,35 +1,34 @@
-﻿import win32com.client
-import time
+﻿import zipfile
 
-
-flag = False
-
-excel_dosya = r'C:\Users\Administrator\Source\Repos\Fatih-gul65\PythonCyberSecurityTool\Kitap1.xlsx'
-sifre_dosya = r'C:\Users\Administrator\Source\Repos\Fatih-gul65\PythonCyberSecurityTool\wordlist.txt'
-
-excel_app = win32com.client.Dispatch("Excel.Application")
-
-password_list = []
-
-with open(sifre_dosya, "r", encoding = "utf-8") as pwd:
-        passwords = pwd.readlines()
+def crack_zip(zip_file, passwords):
+    """ZIP dosyasının şifresini kırmaya çalışır."""
+    with zipfile.ZipFile(zip_file) as zf:
         for password in passwords:
-            password_list.append(password.replace("\n", ""))
-        
+            try:
+                # Şifreyi dener
+                zf.extractall(pwd=password.encode())
+                print(f"Şifre bulundu: {password}")
+                return password
+            except RuntimeError:
+                # Yanlış şifre durumunda devam eder
+                continue
+    print("Şifre bulunamadı.")
+    return None
 
-for password in password_list:
-        try:
-            wb = excel_app.Workbooks.Open(excel_dosya, False, True, None, password)
-            wb.Unprotect(password)
-            print("Şifreniz: " + password)
-            excel_app.DisplayAlerts = False
-            excel_app.Quit()
-            time.sleep(1)
-            flag = True
-            quit()
-        except:
-            if flag == True:
-                break
-            else: 
-                print("Şifre Hatalı: " + password)
-            continue
+# Wordlist'ten şifreleri okuma
+def load_passwords(wordlist_file):
+    """Wordlist dosyasından şifreleri okur."""
+    with open(wordlist_file, "r", encoding="utf-8") as f:
+        return [line.strip() for line in f]
+
+# Kullanım
+zip_file = "sifreliDosya.zip"  # Şifreli ZIP dosyanız
+wordlist_file = "wordlist.txt"  # Şifre listesi dosyanız
+
+passwords = load_passwords(wordlist_file)
+found_password = crack_zip(zip_file, passwords)
+
+if found_password:
+    print(f"ZIP dosyasının şifresi: {found_password}")
+else:
+    print("Şifre bulunamadı.")
